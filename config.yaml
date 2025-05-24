@@ -76,22 +76,3 @@ data_quality_checks:
       - name: "fare_matches_distance"
         rule: "custom_expression"
         expression: "pl.col('fare_amount') >= (pl.col('trip_distance') * 0.5)" # Example: fare should be at least $0.5/mile
-
-
-# Alerting Configuration
-alerting:
-  enabled: true
-  send_on_success: false # Set to true if you want notifications even for successful runs
-  email:
-    enabled: true
-    sender_email: "your_alert_sender@example.com"
-    sender_password: "your_email_password" # Or an app-specific password/API key
-    smtp_server: "smtp.example.com" # e.g., "smtp.gmail.com"
-    smtp_port: 587 # or 465 (SSL)
-    recipients:
-      - "your_name@example.com"
-      - "team_lead@example.com"
-  slack_webhook:
-    enabled: false # Set to true to use Slack
-    webhook_url: "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX"
-    channel: "#data-quality-alerts" # Optional: default channel
