@@ -2,13 +2,41 @@
 Contains the main functionality for data quality checks.
 """
 
-
-def compute_basic_stats(df):
-    # Calculate and return general dataset statistics like total rows, columns, and column names.
-    return 0
+import polars as pl
 
 
-def calculate_null_metrics(df, config):
+def compute_basic_stats(df: pl.DataFrame) -> dict:
+    """Calculate basic statistics for the dataset.
+
+    Args:
+        df : Polars DataFrame to compute statistics on.
+
+    Returns:
+           dict: A dictionary containing:
+            - "row_count" (int): Total number of rows in the DataFrame.
+            - "column_count" (int): Total number of columns in the DataFrame.
+            - "column_names" (List[str]): List of column names.
+    """
+
+    result = {
+        "row_count": df.height,
+        "column_count": df.width,
+        "column_names": df.columns,
+    }
+
+    return result
+
+
+def calculate_null_metrics(df: pl.DataFrame, config):
+    """Calculate null metrics for each column in the DataFrame.
+    Args:
+        df (pl.DataFrame): The Polars DataFrame to analyze.
+        config (dict): Configuration dictionary containing null thresholds for each column.
+    Returns:
+    """
+
+    # for i in df.columns:
+
     # For each column, compute null counts and null percentages; compare against configured thresholds and record violations.
     return 0
 
