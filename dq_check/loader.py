@@ -27,7 +27,7 @@ def load_file(file_path: str) -> pl.DataFrame:
         return pl.read_parquet("file_path")
     elif file_path.endswith(".json"):
         return pl.read_json("file_path")
-    elif file_path.enswith(".ipc"):
+    elif file_path.endswith(".ipc"):
         return pl.read_ipc("file_path")
     else:
         raise ValueError(
