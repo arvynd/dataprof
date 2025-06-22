@@ -27,7 +27,7 @@ def compute_basic_stats(df: pl.DataFrame) -> dict:
     return result
 
 
-def calculate_null_metrics(df: pl.DataFrame, config):
+def calculate_null_metrics(df: pl.DataFrame, threshold=0.5):
     """Calculate null metrics for each column in the DataFrame.
     Args:
         df (pl.DataFrame): The Polars DataFrame to analyze.
@@ -35,14 +35,24 @@ def calculate_null_metrics(df: pl.DataFrame, config):
     Returns:
     """
 
-    # for i in df.columns:
+    total_rows = df.height
+    null_summary = df.select(
+        [pl.col(col).null_count().alias(f"{col}_null_count") for col in df.columns]
+        + [
+            (pl.col(col).null_count() / total_rows * 100).alias(f"{col}_null_pct")
+            for col in df.columns
+        ]
+    )
 
-    # For each column, compute null counts and null percentages; compare against configured thresholds and record violations.
-    return 0
+    return null_summary
 
 
-# def calculate_uniqueness_metrics(df, config):
-#     #For each column, calculate unique value counts and percentages; check against uniqueness thresholds and log issues.
+def calculate_uniqueness_metrics(df:pl.DataFrame):
+    #For each column, calculate unique value counts and percentages; check against uniqueness thresholds and log issues.
+    """Calculate 
+    """
+
+    return df
 
 # validate_required_columns(df, config)
 # Verify that all required columns specified in the config are present; report any missing columns.
@@ -58,3 +68,21 @@ def calculate_null_metrics(df: pl.DataFrame, config):
 
 # aggregate_results(metrics_list, violations_list)
 # Combine all computed metrics and detected violations into a structured summary report.
+
+
+# import polars as pl
+
+df = pl.DataFrame(
+    {
+        "foo": [1, None, 3],
+        "bar": [6, 7, None],
+        "ham": ["a", "b", "c"],
+    }
+)
+# print(df.null_count())
+
+# df.null_count()i,row[0]
+
+calculate_null_metrics(df)
+a
+df.null_count()
