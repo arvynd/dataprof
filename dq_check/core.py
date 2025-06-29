@@ -27,11 +27,11 @@ def compute_basic_stats(df: pl.DataFrame) -> dict:
     return result
 
 
-def calculate_null_metrics(df: pl.DataFrame, threshold=0.5):
+def calculate_null_metrics(df: pl.DataFrame):
     """Calculate null metrics for each column in the DataFrame.
     Args:
         df (pl.DataFrame): The Polars DataFrame to analyze.
-        config (dict): Configuration dictionary containing null thresholds for each column.
+        TODO : config (dict): Configuration dictionary containing null thresholds for each column.
     Returns:
     """
 
@@ -49,10 +49,11 @@ def calculate_null_metrics(df: pl.DataFrame, threshold=0.5):
 
 def calculate_uniqueness_metrics(df:pl.DataFrame):
     #For each column, calculate unique value counts and percentages; check against uniqueness thresholds and log issues.
-    """Calculate 
-    """
 
-    return df
+    #TODO : config (dict): Configuration dictionary containing null thresholds for each column.
+    unique_values = df.select(pl.col(col).n_unique().alias(f"{col}_unique_val_count") for col in df.columns)
+
+    return unique_values
 
 # validate_required_columns(df, config)
 # Verify that all required columns specified in the config are present; report any missing columns.
@@ -84,5 +85,16 @@ df = pl.DataFrame(
 # df.null_count()i,row[0]
 
 calculate_null_metrics(df)
-a
-df.null_count()
+
+# df.null_count()
+
+
+# df.select(
+#     [pl.col(col).null_count().alias(f"{col}_null_count") for col in df.columns]) +
+
+ #For each column, calculate unique value counts and percentages; check against uniqueness thresholds and log issues.
+
+df.select(pl.col(col).n_unique().alias(f"{col}_unique_val_count") for col in df.columns)
+
+df.glimpse
+
