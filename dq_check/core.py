@@ -76,27 +76,27 @@ def calculate_uniqueness_metrics(df: pl.DataFrame):
 
 # import polars as pl
 
-df = pl.DataFrame(
-    {
-        "foo": [1, None, 3],
-        "bar": [6, 7, None],
-        "ham": ["a", "b", "c"],
-    }
-)
-# print(df.null_count())
+# df = pl.DataFrame(
+#     {
+#         "foo": [1, None, 3],
+#         "bar": [7, 7, None],
+#         "ham": ["a", "b", "c"],
+#     }
+# )
+# # print(df.null_count())
 
-# df.null_count()i,row[0]
+# # df.null_count()i,row[0]
 
-calculate_uniqueness_metrics(df)
+# calculate_uniqueness_metrics(df)
 
-# df.null_count()
+# # df.null_count()
 
 
-# df.select(
-#     [pl.col(col).null_count().alias(f"{col}_null_count") for col in df.columns]) +
+# # df.select(
+# #     [pl.col(col).null_count().alias(f"{col}_null_count") for col in df.columns]) +
 
-# For each column, calculate unique value counts and percentages; check against uniqueness thresholds and log issues.
+# # For each column, calculate unique value counts and percentages; check against uniqueness thresholds and log issues.
 
-df.select(pl.col(col).n_unique().alias(f"{col}_unique_val_count") for col in df.columns)
+# df.select(pl.col(col).n_unique().alias(f"{col}_unique_val_count") for col in df.columns)
 
-df.glimpse
+# df.glimpse
