@@ -6,7 +6,11 @@ import click
 from rich.console import Console
 from rich.table import Table
 from loader import load_file
-from core import compute_basic_stats, calculate_null_metrics
+from core import (
+    compute_basic_stats,
+    calculate_null_metrics,
+    calculate_uniqueness_metrics,
+)
 
 console = Console()
 
@@ -50,9 +54,13 @@ def main(input, verbose):
     console.log("Checking Nulls...")
     nulls_df = calculate_null_metrics(df)
     nulls_df = nulls_df.to_pandas()
-
-    # Print nulls_df as a Rich Table
     console.print(df_to_rich_table(nulls_df, title="Null Value Metrics"))
+
+    # Get Uniqueness Details
+    console.log("Checking Uniqueness Details...")
+    unique_values = calculate_uniqueness_metrics(df)
+    unique_values = unique_values.to_pandas()
+    console.print(df_to_rich_table(unique_values, title="Unique Values"))
 
 
 if __name__ == "__main__":
