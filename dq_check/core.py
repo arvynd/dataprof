@@ -3,100 +3,78 @@ Contains the main functionality for data quality checks.
 """
 
 import polars as pl
+from rich.console import Console
+from rich.table import Table
+from rich.text import Text
+from rich import box
+
+console = Console()
+text = Text()
 
 
-def compute_basic_stats(df: pl.DataFrame) -> dict:
-    """Calculate basic statistics for the dataset.
+def compute_basic_stats(df):
+    stats_table = Table(
+        title="Basic Dataset Statistics",
+        title_justify="left",
+        box=box.ASCII,
+        title_style="#E91E63",
+    )
+    stats_table.add_column("Metric", style="cyan", no_wrap=True)
+    stats_table.add_column("Value", style="magenta")
 
-    Args:
-        df : Polars DataFrame to compute statistics on.
+    stats_table.add_row("Row Count", str(df.height))
+    stats_table.add_row("Column Count", str(df.width))
+    stats_table.add_row("Column Names", ", ".join(df.columns))
 
-    Returns:
-           dict: A dictionary containing:
-            - "row_count" (int): Total number of rows in the DataFrame.
-            - "column_count" (int): Total number of columns in the DataFrame.
-            - "column_names" (List[str]): List of column names.
-    """
-
-    result = {
-        "row_count": df.height,
-        "column_count": df.width,
-        "column_names": df.columns,
-    }
-
-    return result
+    console.print(stats_table)
 
 
-def calculate_null_metrics(df: pl.DataFrame):
-    """Calculate null metrics for each column in the DataFrame.
-    Args:
-        df (pl.DataFrame): The Polars DataFrame to analyze.
-        TODO : config (dict): Configuration dictionary containing null thresholds for each column.
-    Returns:
-    """
-
-    total_rows = df.height
-    null_summary = df.select(
-        [pl.col(col).null_count().alias(f"{col}_null_count") for col in df.columns]
-        + [
-            (pl.col(col).null_count() / total_rows * 100).alias(f"{col}_null_pct")
-            for col in df.columns
-        ]
+def check_null_counts(df: pl.DataFrame, threshold):
+    console.print(
+        f"Checking Null Thresholds with threshold set to {threshold}...",
+        style="#FF9800",
     )
 
-    return null_summary
-
-
-def calculate_uniqueness_metrics(df: pl.DataFrame):
-    # For each column, calculate unique value counts and percentages; check against uniqueness thresholds and log issues.
-
-    # TODO : config (dict): Configuration dictionary containing null thresholds for each column.
-    unique_values = df.select(
-        pl.col(col).n_unique().alias(f"{col}_unique_val_count") for col in df.columns
+    table = Table(
+        title="Null info",
+        title_justify="left",
+        box=box.ASCII,
+        title_style="#E91E63",
     )
 
-    return unique_values
+    table.add_column("Column")
+    table.add_column("Null Count")
+    table.add_column("Null %")
+
+    null_counts = df.select([pl.col(c).null_count().alias(c) for c in df.columns])
+
+    for col in df.columns:
+        null_count = null_counts[col].item()
+        null_pct = (null_count / df.height) * 100
+        # Determine row style based on threshold
+        row_style = "red" if null_pct > threshold else "green"
+        table.add_row(
+            f"[{row_style}]{col}[/{row_style}]",
+            f"[{row_style}]{null_count}[/{row_style}]",
+            f"[{row_style}]{null_pct:.2f}%[/{row_style}]",
+        )
+
+    console.print(table)
+
+    return None
 
 
-# validate_required_columns(df, config)
-# Verify that all required columns specified in the config are present; report any missing columns.
+def df_to_rich_table(df, title=None):
+    """Convert a pandas DataFrame to a Rich Table."""
+    table = Table(show_header=True, header_style="bold magenta", title=title)
+    for col in df.columns:
+        table.add_column(str(col))
 
-# validate_column_types(df, config)
-# Compare actual data types of columns with expected types from the config; report type mismatches.
+    for _, row in df.iterrows():
+        table.add_row(*map(str, row.values))
 
-# perform_range_checks(df, config)
-# For numerical columns with defined range constraints, check if values lie within acceptable limits; flag violations.
-
-# perform_pattern_checks(df, config)
-# For columns with regex or format requirements, validate values and capture non-conforming entries.
-
-# aggregate_results(metrics_list, violations_list)
-# Combine all computed metrics and detected violations into a structured summary report.
+    return table
 
 
-# import polars as pl
-
-# df = pl.DataFrame(
-#     {
-#         "foo": [1, None, 3],
-#         "bar": [7, 7, None],
-#         "ham": ["a", "b", "c"],
-#     }
-# )
-# # print(df.null_count())
-
-# # df.null_count()i,row[0]
-
-# calculate_uniqueness_metrics(df)
-
-# # df.null_count()
-
-
-# # df.select(
-# #     [pl.col(col).null_count().alias(f"{col}_null_count") for col in df.columns]) +
-
-# # For each column, calculate unique value counts and percentages; check against uniqueness thresholds and log issues.
-
-# df.select(pl.col(col).n_unique().alias(f"{col}_unique_val_count") for col in df.columns)
-
-# df.glimpse
+def start_message(verbose):
+    console.print(f"Starting profiling, verbosity set to {verbose}", style="#2196F3")
