@@ -6,7 +6,6 @@ Built with Polars for speed, Rich for beautiful terminal output, and Click for a
 
 ### Installation
 ```bash
-# For development
 git clone https://github.com/Aravind-Pramod/dataprof.git
 cd dataprof
 uv venv
