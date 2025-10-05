@@ -8,6 +8,8 @@ from core import (
     compute_basic_stats,
     check_null_counts,
     start_message,
+    compute_summary_stats,
+    print_schema,
 )
 
 
@@ -28,6 +30,12 @@ def main(input, verbose, null_threshold):
 
     # Compute null info
     check_null_counts(df, null_threshold)
+
+    # Print Schema
+    print_schema(df)
+
+    # Compute summary statistics
+    compute_summary_stats(df)
 
 
 if __name__ == "__main__":
