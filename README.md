@@ -2,6 +2,7 @@
 
 Fast data profiling CLI for CSV, Parquet, and other tabular data files.
 Built with Polars for speed, Rich for beautiful terminal output, and Click for a smooth CLI experience.
+Under Active Development - This project is in early development.
 
 
 ### Installation
