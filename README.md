@@ -6,16 +6,25 @@ Built with Polars for speed, Rich for beautiful terminal output, and Click for a
 
 This project is in early development.
 
+## Installation
 
-### Installation
+### Development (Editable Mode)
+
+For local development:
+
 ```bash
-git clone https://github.com/Aravind-Pramod/dataprof.git
+git clone https://github.com/arvynd/dataprof.git
 cd dataprof
 uv venv
 source .venv/bin/activate
-uv pip install -e .
+uv pip install --e .
 ```
 
+User Install (Isolated CLI Tool)
+
+```bash
+uv tool install git+https://github.com/Aravind-Pramod/dataprof.git
+```
 
 ### Usage
 
