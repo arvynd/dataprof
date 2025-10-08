@@ -23,7 +23,7 @@ uv pip install --e .
 User Install (Isolated CLI Tool)
 
 ```bash
-uv tool install git+https://github.com/Aravind-Pramod/dataprof.git
+uv tool install git+https://github.com/arvynd/dataprof.git
 ```
 
 ### Usage
