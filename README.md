@@ -10,6 +10,14 @@ This project is in early development.
 
 ### Development (Editable Mode)
 
+For local testing without installing:
+
+```bash
+git clone https://github.com/arvynd/dataprof.git
+cd dataprof
+uvx --from . dataprof data.csv
+```
+
 For local development:
 
 ```bash
