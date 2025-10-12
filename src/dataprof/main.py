@@ -10,6 +10,7 @@ from dataprof.core import (
     start_message,
     compute_summary_stats,
     print_schema,
+    categorical_column_info,
 )
 
 
@@ -36,6 +37,9 @@ def main(input, verbose, null_threshold):
 
     # Compute summary statistics
     compute_summary_stats(df)
+
+    # Get categorical column info
+    categorical_column_info(df)
 
 
 if __name__ == "__main__":

@@ -20,11 +20,11 @@ def load_file(file_path: str, verbose) -> pl.DataFrame:
     if file_path.endswith(".csv"):
         df = pl.read_csv(file_path, infer_schema=True, infer_schema_length=1000)
     elif file_path.endswith(".parquet"):
-        df = pl.read_parquet(file_path, infer_schema=True, infer_schema_length=1000)
+        df = pl.read_parquet(file_path)
     elif file_path.endswith(".json"):
-        df = pl.read_json(file_path, infer_schema=True, infer_schema_length=1000)
+        df = pl.read_json(file_path)
     elif file_path.endswith(".ipc"):
-        df = pl.read_ipc(file_path, infer_schema=True, infer_schema_length=1000)
+        df = pl.read_ipc(file_path)
     else:
         raise ValueError(
             f"Unsupported file type: {file_path}. Supported formats are: .csv, .parquet, .json, .ipc"

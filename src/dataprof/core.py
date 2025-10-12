@@ -177,9 +177,9 @@ def compute_summary_stats(df: pl.DataFrame) -> None:
     for col in df.select(cs.numeric()).columns:
         table.add_row(
             f"{col}",
-            f"{df.select(pl.col(col).max()).item()}",
-            f"{df.select(pl.col(col).mean()).item()}",
-            f"{df.select(pl.col(col).min()).item()}",
+            f"{df.select(pl.col(col).max()).item():.2f}",
+            f"{df.select(pl.col(col).mean()).item():.2f}",
+            f"{df.select(pl.col(col).min()).item():.2f}",
         )
 
     # Print to console
@@ -225,6 +225,63 @@ def print_schema(df: pl.DataFrame) -> None:
         table.add_row(f"{col}", f"{df.schema.get(col)}")
 
     # Print to console.
+    console.print(table)
+
+    return None
+
+
+def categorical_column_info(df: pl.DataFrame):
+    """
+    Display overview of categorical (string) columns in the DataFrame.
+
+    Analyzes string columns and displays a summary table showing:
+    - Column name
+    - Number of unique values (cardinality)
+    - Most common value
+    - Frequency of the most common value
+
+    Args:
+        df: Polars DataFrame to analyze
+
+    Returns:
+        None. Prints formatted table to console.
+    """
+    console.print("Profiling categorical columns..", style="#FF9800")
+
+    # Rich table
+    table = Table(
+        title="Categorical Columns Overview",
+        title_justify="left",
+        box=box.ASCII,
+        title_style="#E91E63",
+    )
+
+    # Define columns
+    table.add_column("Column", style="cyan")
+    table.add_column("Unique", style="magenta")
+    table.add_column("Most Common", style="green")
+    table.add_column("Frequency", style="yellow")
+
+    # Get necessary details for each column.
+    for col in df.select(cs.string(include_categorical=True)).columns:
+        unique_count = df.select(pl.col(col)).n_unique()
+        # Get most common value
+        value_counts = (
+            df.select(pl.col(col).value_counts())
+            .unnest(col)
+            .sort(by="count", descending=True)
+        )
+        # Get the most common value and frequency
+        most_common = value_counts.head(1).select(col).item()
+        frequency = value_counts.head(1).select(pl.col("count")).item()
+
+        #! TODO - Show multiple options if they are all equal in count
+        #! TODD - Get column percent values
+
+        # Add row
+        table.add_row(col, str(unique_count), most_common, str(frequency))
+
+    # Print table.
     console.print(table)
 
     return None
