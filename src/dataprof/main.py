@@ -11,6 +11,8 @@ from dataprof.core import (
     compute_summary_stats,
     print_schema,
     categorical_column_info,
+    detect_duplicates,
+    detect_outliers,
 )
 
 
@@ -40,6 +42,12 @@ def main(input, verbose, null_threshold):
 
     # Get categorical column info
     categorical_column_info(df)
+
+    # Detect duplicates
+    detect_duplicates(df)
+
+    # Detect outliers
+    detect_outliers(df)
 
 
 if __name__ == "__main__":

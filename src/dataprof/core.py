@@ -230,6 +230,81 @@ def print_schema(df: pl.DataFrame) -> None:
     return None
 
 
+def detect_outliers(df: pl.DataFrame) -> None:
+    """
+    Detect and display outliers in numeric columns using IQR method.
+
+    For each numeric column, shows:
+    - Number of outliers
+    - Percentage of outliers
+    - Lower and upper bounds
+
+    Args:
+        df: Polars DataFrame to analyze
+
+    Returns:
+        None. Prints formatted table with outlier statistics to console.
+    """
+    console.print(
+        "Detecting outliers using IQR method...",
+        style="#FF9800",
+    )
+
+    # Rich table
+    table = Table(
+        title="Outlier Detection (IQR Method)",
+        title_justify="left",
+        box=box.ASCII,
+        title_style="#E91E63",
+    )
+
+    # Add columns
+    table.add_column("Column", style="cyan")
+    table.add_column("Outliers", style="red")
+    table.add_column("Outlier %", style="red")
+    table.add_column("Lower Bound", style="green")
+    table.add_column("Upper Bound", style="green")
+
+    # Get numeric columns
+    numeric_cols = df.select(cs.numeric()).columns
+
+    if not numeric_cols:
+        console.print("No numeric columns found for outlier detection.", style="yellow")
+        return None
+
+    # Analyze each numeric column
+    for col in numeric_cols:
+        # Calculate Q1, Q3, and IQR
+        q1 = df.select(pl.col(col).quantile(0.25)).item()
+        q3 = df.select(pl.col(col).quantile(0.75)).item()
+        iqr = q3 - q1
+
+        # Calculate bounds
+        lower_bound = q1 - 1.5 * iqr
+        upper_bound = q3 + 1.5 * iqr
+
+        # Count outliers
+        outliers = df.filter(
+            (pl.col(col) < lower_bound) | (pl.col(col) > upper_bound)
+        ).height
+
+        outlier_pct = (outliers / df.height) * 100 if df.height > 0 else 0
+
+        # Add row
+        table.add_row(
+            col,
+            str(outliers),
+            f"{outlier_pct:.2f}%",
+            f"{lower_bound:.2f}",
+            f"{upper_bound:.2f}",
+        )
+
+    # Print to console
+    console.print(table)
+
+    return None
+
+
 def categorical_column_info(df: pl.DataFrame):
     """
     Display overview of categorical (string) columns in the DataFrame.
@@ -282,6 +357,56 @@ def categorical_column_info(df: pl.DataFrame):
         table.add_row(col, str(unique_count), most_common, str(frequency))
 
     # Print table.
+    console.print(table)
+
+    return None
+
+
+def detect_duplicates(df: pl.DataFrame) -> None:
+    """
+    Analyze and display duplicate row information.
+
+    Shows:
+    - Total number of duplicate rows
+    - Percentage of duplicate rows
+    - Number of unique rows
+
+    Args:
+        df: Polars DataFrame to analyze
+
+    Returns:
+        None. Prints formatted table with duplicate statistics to console.
+    """
+    console.print(
+        "Analyzing duplicate rows...",
+        style="#FF9800",
+    )
+
+    # Rich table
+    table = Table(
+        title="Duplicate Analysis",
+        title_justify="left",
+        box=box.ASCII,
+        title_style="#E91E63",
+    )
+
+    # Add columns
+    table.add_column("Metric", style="cyan", no_wrap=True)
+    table.add_column("Value", style="magenta")
+
+    # Calculate duplicates
+    total_rows = df.height
+    unique_rows = df.n_unique()
+    duplicate_rows = total_rows - unique_rows
+    duplicate_pct = (duplicate_rows / total_rows) * 100 if total_rows > 0 else 0
+
+    # Add rows
+    table.add_row("Total Rows", str(total_rows))
+    table.add_row("Unique Rows", str(unique_rows))
+    table.add_row("Duplicate Rows", str(duplicate_rows))
+    table.add_row("Duplicate %", f"{duplicate_pct:.2f}%")
+
+    # Print to console
     console.print(table)
 
     return None
