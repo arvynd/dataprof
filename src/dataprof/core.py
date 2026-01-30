@@ -11,10 +11,10 @@ data types automatically.
 """
 
 import polars as pl
+import polars.selectors as cs
+from rich import box
 from rich.console import Console
 from rich.table import Table
-from rich import box
-import polars.selectors as cs
 
 console = Console()
 
@@ -129,7 +129,10 @@ def start_message(verbose) -> None:
         None. Prints message to console.
 
     """
-    console.print(f"Starting profiling, verbosity set to {verbose}", style="#2196F3")
+    console.print(
+        f"Starting profiling, verbosity set to {'on' if verbose else 'off'}",
+        style="#2196F3",
+    )
 
 
 def compute_summary_stats(df: pl.DataFrame) -> None:
