@@ -1,5 +1,5 @@
 [project]
-name = "polars-dq-monitor"
+name = "dataprof"
 version = "0.1.0"
 description = "Fast data profiling CLI for tabular data"
 readme = "README.md"
@@ -22,6 +22,11 @@ build-backend = "uv_build"
 [tool.uv.build-backend]
 module-name = "dataprof"
 module-root = "src"
+
+[dependency-groups]
+dev = [
+    "ruff>=0.15.2",
+]
 
 [project.scripts]
 dataprof = "dataprof.main:main"
