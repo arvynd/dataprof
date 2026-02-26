@@ -232,8 +232,8 @@ class TestComputeSummaryStats:
 
             table = _get_table_from_mock(mock_print, call_index=1)
             row = _row_values(table, 0)
-            assert "10.00" in row   # max
-            assert "0.00" in row    # mean
+            assert "10.00" in row  # max
+            assert "0.00" in row  # mean
             assert "-10.00" in row  # min
 
 
@@ -244,9 +244,7 @@ class TestComputeSummaryStats:
 
 class TestPrintSchema:
     def test_schema_output(self):
-        df = pl.DataFrame(
-            {"int_col": [1], "str_col": ["a"], "float_col": [1.0]}
-        )
+        df = pl.DataFrame({"int_col": [1], "str_col": ["a"], "float_col": [1.0]})
 
         with patch("dataprof.core.console.print") as mock_print:
             print_schema(df)
@@ -320,10 +318,12 @@ class TestDetectOutliers:
             assert "No numeric columns" in second_msg
 
     def test_multiple_numeric_columns(self):
-        df = pl.DataFrame({
-            "a": [1, 2, 3, 4, 5],
-            "b": [10, 20, 30, 40, 50],
-        })
+        df = pl.DataFrame(
+            {
+                "a": [1, 2, 3, 4, 5],
+                "b": [10, 20, 30, 40, 50],
+            }
+        )
 
         with patch("dataprof.core.console.print") as mock_print:
             detect_outliers(df)
@@ -354,10 +354,12 @@ class TestDetectOutliers:
 
 class TestCategoricalColumnInfo:
     def test_basic_categorical(self):
-        df = pl.DataFrame({
-            "color": ["red", "blue", "red", "red", "blue"],
-            "size": ["S", "M", "L", "S", "S"],
-        })
+        df = pl.DataFrame(
+            {
+                "color": ["red", "blue", "red", "red", "blue"],
+                "size": ["S", "M", "L", "S", "S"],
+            }
+        )
 
         with patch("dataprof.core.console.print") as mock_print:
             categorical_column_info(df)
@@ -368,9 +370,9 @@ class TestCategoricalColumnInfo:
 
             color_row = _row_values(table, 0)
             assert "color" in color_row
-            assert "2" in color_row      # 2 unique values
-            assert "red" in color_row     # most common
-            assert "3" in color_row       # frequency
+            assert "2" in color_row  # 2 unique values
+            assert "red" in color_row  # most common
+            assert "3" in color_row  # frequency
 
             size_row = _row_values(table, 1)
             assert "size" in size_row
@@ -396,9 +398,9 @@ class TestCategoricalColumnInfo:
             table = _get_table_from_mock(mock_print, call_index=1)
             row = _row_values(table, 0)
             assert "status" in row
-            assert "1" in row       # 1 unique
+            assert "1" in row  # 1 unique
             assert "active" in row  # most common
-            assert "5" in row       # frequency
+            assert "5" in row  # frequency
 
 
 # ---------------------------------------------------------------------------
@@ -408,10 +410,12 @@ class TestCategoricalColumnInfo:
 
 class TestDetectDuplicates:
     def test_with_duplicates(self):
-        df = pl.DataFrame({
-            "a": [1, 2, 2, 3, 3, 3],
-            "b": ["x", "y", "y", "z", "z", "z"],
-        })
+        df = pl.DataFrame(
+            {
+                "a": [1, 2, 2, 3, 3, 3],
+                "b": ["x", "y", "y", "z", "z", "z"],
+            }
+        )
 
         with patch("dataprof.core.console.print") as mock_print:
             detect_duplicates(df)
@@ -420,7 +424,9 @@ class TestDetectDuplicates:
             assert isinstance(table, Table)
             assert table.row_count == 4
 
-            rows = {_row_values(table, i)[0]: _row_values(table, i)[1] for i in range(4)}
+            rows = {
+                _row_values(table, i)[0]: _row_values(table, i)[1] for i in range(4)
+            }
             assert rows["Total Rows"] == "6"
             assert rows["Unique Rows"] == "3"
             assert rows["Duplicate Rows"] == "3"
@@ -433,7 +439,9 @@ class TestDetectDuplicates:
             detect_duplicates(df)
 
             table = _get_table_from_mock(mock_print, call_index=1)
-            rows = {_row_values(table, i)[0]: _row_values(table, i)[1] for i in range(4)}
+            rows = {
+                _row_values(table, i)[0]: _row_values(table, i)[1] for i in range(4)
+            }
             assert rows["Total Rows"] == "3"
             assert rows["Unique Rows"] == "3"
             assert rows["Duplicate Rows"] == "0"
@@ -446,7 +454,9 @@ class TestDetectDuplicates:
             detect_duplicates(df)
 
             table = _get_table_from_mock(mock_print, call_index=1)
-            rows = {_row_values(table, i)[0]: _row_values(table, i)[1] for i in range(4)}
+            rows = {
+                _row_values(table, i)[0]: _row_values(table, i)[1] for i in range(4)
+            }
             assert rows["Total Rows"] == "3"
             assert rows["Unique Rows"] == "1"
             assert rows["Duplicate Rows"] == "2"
@@ -459,7 +469,9 @@ class TestDetectDuplicates:
             detect_duplicates(df)
 
             table = _get_table_from_mock(mock_print, call_index=1)
-            rows = {_row_values(table, i)[0]: _row_values(table, i)[1] for i in range(4)}
+            rows = {
+                _row_values(table, i)[0]: _row_values(table, i)[1] for i in range(4)
+            }
             assert rows["Total Rows"] == "1"
             assert rows["Unique Rows"] == "1"
             assert rows["Duplicate Rows"] == "0"
