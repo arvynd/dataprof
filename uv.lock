@@ -96,6 +96,39 @@ wheels = [
 ]
 
 [[package]]
+name = "dataprof"
+version = "0.1.0"
+source = { editable = "." }
+dependencies = [
+    { name = "click" },
+    { name = "ipykernel" },
+    { name = "pandas" },
+    { name = "polars" },
+    { name = "pyarrow" },
+    { name = "rich" },
+    { name = "typer" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "ruff" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "click", specifier = ">=8.2.1" },
+    { name = "ipykernel", specifier = ">=6.30.0" },
+    { name = "pandas", specifier = ">=2.3.1" },
+    { name = "polars", specifier = ">=1.30.0" },
+    { name = "pyarrow", specifier = ">=21.0.0" },
+    { name = "rich", specifier = ">=14.0.0" },
+    { name = "typer", specifier = ">=0.16.0" },
+]
+
+[package.metadata.requires-dev]
+dev = [{ name = "ruff", specifier = ">=0.15.2" }]
+
+[[package]]
 name = "debugpy"
 version = "1.8.19"
 source = { registry = "https://pypi.org/simple" }
@@ -410,39 +443,6 @@ sdist = { url = "https://files.pythonhosted.org/packages/9f/dc/56f2a90c79a2cb13f
 wheels = [
     { url = "https://files.pythonhosted.org/packages/f6/c6/36a1b874036b49893ecae0ac44a2f63d1a76e6212631a5b2f50a86e0e8af/polars-1.36.1-py3-none-any.whl", hash = "sha256:853c1bbb237add6a5f6d133c15094a9b727d66dd6a4eb91dbb07cdb056b2b8ef", size = 802429, upload-time = "2025-12-10T01:13:53.838Z" },
 ]
-
-[[package]]
-name = "polars-dq-monitor"
-version = "0.1.0"
-source = { editable = "." }
-dependencies = [
-    { name = "click" },
-    { name = "ipykernel" },
-    { name = "pandas" },
-    { name = "polars" },
-    { name = "pyarrow" },
-    { name = "rich" },
-    { name = "typer" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "ruff" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "click", specifier = ">=8.2.1" },
-    { name = "ipykernel", specifier = ">=6.30.0" },
-    { name = "pandas", specifier = ">=2.3.1" },
-    { name = "polars", specifier = ">=1.30.0" },
-    { name = "pyarrow", specifier = ">=21.0.0" },
-    { name = "rich", specifier = ">=14.0.0" },
-    { name = "typer", specifier = ">=0.16.0" },
-]
-
-[package.metadata.requires-dev]
-dev = [{ name = "ruff", specifier = ">=0.15.2" }]
 
 [[package]]
 name = "polars-runtime-32"
